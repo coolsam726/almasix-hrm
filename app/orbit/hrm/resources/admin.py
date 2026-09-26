@@ -1,0 +1,226 @@
+"""Admin setup tables."""
+
+from app.models.hrm import (
+    BrandingSetting,
+    EducationLevel,
+    EmailSetting,
+    EmploymentStatus,
+    JobCategory,
+    JobTitle,
+    Language,
+    LicenseType,
+    LocalizationSetting,
+    Location,
+    Membership,
+    ModuleSetting,
+    Nationality,
+    OidcProvider,
+    OrgUnit,
+    PayGrade,
+    Role,
+    Skill,
+    TerminationReason,
+    WorkShift,
+)
+from app.orbit.hrm.resources.factory import crud
+
+JobTitleResource = crud(
+    "JobTitleResource",
+    model=JobTitle,
+    label="Job titles",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-briefcase",
+    sort=1,
+    fields=("name",),
+)
+PayGradeResource = crud(
+    "PayGradeResource",
+    model=PayGrade,
+    label="Pay grades",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-banknotes",
+    sort=2,
+    fields=("name",),
+)
+EmploymentStatusResource = crud(
+    "EmploymentStatusResource",
+    model=EmploymentStatus,
+    label="Employment status",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-identification",
+    sort=3,
+    fields=("name",),
+)
+JobCategoryResource = crud(
+    "JobCategoryResource",
+    model=JobCategory,
+    label="Job categories",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-rectangle-stack",
+    sort=4,
+    fields=("name",),
+)
+WorkShiftResource = crud(
+    "WorkShiftResource",
+    model=WorkShift,
+    label="Work shifts",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-clock",
+    sort=5,
+    fields=("name", "start_time", "end_time"),
+)
+LocationResource = crud(
+    "LocationResource",
+    model=Location,
+    label="Locations",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-map-pin",
+    sort=6,
+    fields=("name", "city", "country"),
+)
+OrgUnitResource = crud(
+    "OrgUnitResource",
+    model=OrgUnit,
+    label="Organization units",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-building-office",
+    sort=7,
+    fields=("name", "parent_id"),
+)
+SkillResource = crud(
+    "SkillResource",
+    model=Skill,
+    label="Skills",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-academic-cap",
+    sort=8,
+    fields=("name",),
+)
+EducationLevelResource = crud(
+    "EducationLevelResource",
+    model=EducationLevel,
+    label="Education",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-book-open",
+    sort=9,
+    fields=("name",),
+)
+LicenseTypeResource = crud(
+    "LicenseTypeResource",
+    model=LicenseType,
+    label="Licenses",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-document-check",
+    sort=10,
+    fields=("name",),
+)
+LanguageResource = crud(
+    "LanguageResource",
+    model=Language,
+    label="Languages",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-language",
+    sort=11,
+    fields=("name",),
+)
+MembershipResource = crud(
+    "MembershipResource",
+    model=Membership,
+    label="Memberships",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-user-group",
+    sort=12,
+    fields=("name",),
+)
+NationalityResource = crud(
+    "NationalityResource",
+    model=Nationality,
+    label="Nationalities",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-flag",
+    sort=13,
+    fields=("name",),
+)
+TerminationReasonResource = crud(
+    "TerminationReasonResource",
+    model=TerminationReason,
+    label="Termination reasons",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-x-circle",
+    sort=14,
+    fields=("name",),
+)
+EmailSettingResource = crud(
+    "EmailSettingResource",
+    model=EmailSetting,
+    label="Email",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-envelope",
+    sort=15,
+    fields=("host", "port", "username", "from_address"),
+)
+BrandingSettingResource = crud(
+    "BrandingSettingResource",
+    model=BrandingSetting,
+    label="Branding",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-swatch",
+    sort=16,
+    fields=("brand_name", "primary_color"),
+)
+OidcProviderResource = crud(
+    "OidcProviderResource",
+    model=OidcProvider,
+    label="Login providers",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-key",
+    sort=17,
+    fields=("name", "issuer", "client_id"),
+)
+RoleResource = crud(
+    "RoleResource",
+    model=Role,
+    label="Roles",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-shield-check",
+    sort=18,
+    fields=("name", "slug"),
+)
+ModuleSettingResource = crud(
+    "ModuleSettingResource",
+    model=ModuleSetting,
+    label="Modules",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-squares-2x2",
+    sort=19,
+    fields=("key",),
+)
+LocalizationSettingResource = crud(
+    "LocalizationSettingResource",
+    model=LocalizationSetting,
+    label="Localization",
+    group="Admin",
+    data_group="admin",
+    icon="heroicon-o-globe-alt",
+    sort=20,
+    fields=("date_format", "language"),
+)
