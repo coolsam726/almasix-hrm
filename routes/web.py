@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from almasix.routing import Route
-
 from app.http.api import (
     anniversaries_route,
     assistant_route,

@@ -13,9 +13,9 @@ from app.models.hrm import (
     ClaimType,
     Course,
     CourseEnrollment,
+    Customer,
     CustomField,
     CustomFieldValue,
-    Customer,
     Dependent,
     DeskRequest,
     DevelopmentPlan,
@@ -73,9 +73,9 @@ from app.models.hrm import (
     TimesheetItem,
     Tracker,
     Vacancy,
+    WorkflowTransition,
     WorkShift,
     WorkWeek,
-    WorkflowTransition,
 )
 from app.models.user import User
 
