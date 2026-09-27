@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "almasix-hrm"
+version = "0.1.0"
+description = "Almasix HRM — people operations on Almasix and Orbit"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = [
+    "almasix[conduit]>=0.9.4",
+    "almasix-orbit>=0.5.1",
+    "almasix-conduit>=0.2.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff==0.16.6",
+]
+
+[project.scripts]
+smith = "almasix.smith.cli:app"
+
+[tool.uv.sources]
+almasix = { path = "../almasix", editable = true }
+almasix-conduit = { path = "../almasix-conduit", editable = true }
+almasix-orbit = { path = "../almasix-orbit/packages/combined", editable = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*", "*Test"]
+
+[tool.ruff]
+line-length = 100
+src = ["app", "tests", "database", "bootstrap", "config", "routes"]
+
+[tool.ruff.lint]
+# Model `casts` dicts are class configuration, same as Almasix's own models.
+ignore = ["E501", "RUF012"]
