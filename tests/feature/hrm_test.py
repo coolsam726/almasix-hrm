@@ -595,8 +595,9 @@ class PanelTest(HrmTest):
         assert "Assistant" in titles
         groups = {resource.navigation_group for resource in panel._resources}
         groups.update(page.navigation_group for page in panel._pages)
-        for name in ("PIM", "My Info", "Recruitment", "Performance", "Directory", "Buzz", "Claim", "Maintenance"):
+        for name in ("PIM", "ESS", "Contracts", "Recruitment", "Performance", "Directory", "Buzz", "Claim", "Maintenance"):
             assert name in groups
+        assert "My Info" not in groups
         assert "People" not in groups
         assert "Talent" not in groups
         assert "Workplace" not in groups
@@ -631,11 +632,25 @@ class PanelTest(HrmTest):
         assert EmployeeResource.can_view_any(self.grace)
         assert EmployeeResource.can_view_any(self.ada)
 
-        from app.orbit.hrm.pages.places import MyInfoPage, OrgChartPage
+        from app.orbit.hrm.pages.ess import ContractManagementPage, MyInfoPage, SalaryPage
+        from app.orbit.hrm.pages.places import OrgChartPage
+        from app.orbit.hrm.resources.people import EmployeeContactResource
 
         assert MyInfoPage.can_access(self.alan)
         assert not OrgChartPage.can_access(self.alan)
         assert OrgChartPage.can_access(self.grace)
+        assert EmployeeContactResource.get_should_register_navigation() is False
+        assert not SalaryPage.can_access(self.alan)
+        assert SalaryPage.can_access(self.ada)
+        mine = await MyInfoPage.render(user=self.alan)
+        assert "Alan Turing" in mine
+        assert "Ada Lovelace" not in mine
+        alan_contracts = await ContractManagementPage.render(user=self.alan)
+        assert "Alan Turing" in alan_contracts
+        assert "Ada Lovelace" not in alan_contracts
+        ada_contracts = await ContractManagementPage.render(user=self.ada)
+        assert "Ada Lovelace" in ada_contracts
+        assert "Alan Turing" in ada_contracts
 
         titles = JobTitleResource.get_table()
         assert titles._header_actions[0].is_modal()

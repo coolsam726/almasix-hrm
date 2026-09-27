@@ -23,10 +23,11 @@ def register_hrm_panel(registry: PanelRegistry) -> Panel:
         .login()
         .navigation_group(NavigationGroup.make("Admin").icon("heroicon-o-cog-6-tooth").sort(10))
         .navigation_group(NavigationGroup.make("PIM").icon("heroicon-o-users").sort(20))
+        .navigation_group(NavigationGroup.make("Contracts").icon("heroicon-o-document-text").sort(25))
         .navigation_group(NavigationGroup.make("Leave").icon("heroicon-o-calendar").sort(30))
         .navigation_group(NavigationGroup.make("Time").icon("heroicon-o-clock").sort(40))
         .navigation_group(NavigationGroup.make("Recruitment").icon("heroicon-o-user-plus").sort(50))
-        .navigation_group(NavigationGroup.make("My Info").icon("heroicon-o-user").sort(60))
+        .navigation_group(NavigationGroup.make("ESS").icon("heroicon-o-user").sort(60))
         .navigation_group(NavigationGroup.make("Performance").icon("heroicon-o-chart-bar").sort(70))
         .navigation_group(NavigationGroup.make("Directory").icon("heroicon-o-book-open").sort(80))
         .navigation_group(NavigationGroup.make("Maintenance").icon("heroicon-o-trash").sort(90))
@@ -40,9 +41,9 @@ def register_hrm_panel(registry: PanelRegistry) -> Panel:
                 NavigationSubgroup.make("Qualifications").parent("Admin").icon("heroicon-o-academic-cap").sort(30),
                 NavigationSubgroup.make("Configuration").parent("Admin").icon("heroicon-o-adjustments-horizontal").sort(40),
                 NavigationSubgroup.make("Configuration").parent("PIM").icon("heroicon-o-adjustments-horizontal").sort(30),
-                NavigationSubgroup.make("Personal").parent("My Info").icon("heroicon-o-identification").sort(10),
-                NavigationSubgroup.make("Job").parent("My Info").icon("heroicon-o-briefcase").sort(20),
-                NavigationSubgroup.make("Qualifications").parent("My Info").icon("heroicon-o-academic-cap").sort(30),
+                NavigationSubgroup.make("Personal").parent("ESS").icon("heroicon-o-identification").sort(10),
+                NavigationSubgroup.make("Job").parent("ESS").icon("heroicon-o-briefcase").sort(20),
+                NavigationSubgroup.make("Qualifications").parent("ESS").icon("heroicon-o-academic-cap").sort(30),
                 NavigationSubgroup.make("Configure").parent("Leave").icon("heroicon-o-cog-6-tooth").sort(10),
                 NavigationSubgroup.make("Requests").parent("Leave").icon("heroicon-o-inbox").sort(20),
                 NavigationSubgroup.make("Projects").parent("Time").icon("heroicon-o-folder").sort(10),

@@ -11,7 +11,7 @@ license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
     "almasix[conduit]>=0.9.4",
-    "almasix-orbit>=0.5.1",
+    "almasix-orbit>=0.5.2",
     "almasix-conduit>=0.2.1",
 ]
 
