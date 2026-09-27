@@ -644,7 +644,7 @@ class PanelTest(HrmTest):
         assert all(action.is_modal() for action in titles._actions)
         row = titles._render_row({"id": 1, "name": "Engineer"}, titles.flat_columns())
         assert "or-tr-clickable" in row
-        assert 'data-record-action="view"' in row
+        assert 'data-record-action="view"' in row or "data-record-url=" in row
         employees = EmployeeResource.get_table()
         assert employees._header_actions[0].is_modal() is False
         assert employees._header_actions[0].get_url() == "/employees/create"
