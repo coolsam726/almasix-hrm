@@ -87,38 +87,6 @@ class LeaveCalendarPage(Guard, Page):
         )
 
 
-class MyInfoPage(Guard, Page):
-    """ESS entry. OrangeHRM labels this side module My Info."""
-
-    slug = "my-info"
-    title = "My Info"
-    navigation_label = "Personal details"
-    navigation_group = "My Info"
-    navigation_subgroup = "Personal"
-    navigation_icon = "heroicon-o-user"
-    navigation_sort = 1
-    data_group = "pim"
-
-    @classmethod
-    def render(cls, **ctx: Any) -> str:
-        del ctx
-        from almasix.orbit.panels.pages.resource_pages import _auth_user
-
-        user = _auth_user()
-        employee_id = getattr(user, "employee_id", None) if user is not None else None
-        if not employee_id:
-            return (
-                '<div class="or-page"><h1 class="or-page-title">My Info</h1>'
-                "<p>This account is not linked to an employee record.</p></div>"
-            )
-        return (
-            '<div class="or-page"><h1 class="or-page-title">My Info</h1>'
-            "<p>This is your own employee record. Contacts, dependents, and "
-            "immigration for you are in the menu beside this page.</p>"
-            f'<p><a href="/employees/{employee_id}">Open your record</a></p></div>'
-        )
-
-
 class DirectoryPage(Guard, Page):
     slug = "directory"
     title = "Directory"

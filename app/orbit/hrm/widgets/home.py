@@ -36,7 +36,8 @@ class HeadcountNote(Widget):
         return (
             "<ul>"
             "<li>PIM — the employee list, for people you are allowed to manage</li>"
-            "<li>My Info — your own record, contacts, and dependents</li>"
+            "<li>Contracts — employment start and end for those same people</li>"
+            "<li>ESS — your own record: personal details, contacts, job, and qualifications</li>"
             "<li>Leave — entitlements, requests, and the holiday calendar</li>"
             "<li>Time — timesheets and attendance punches</li>"
             "<li>Recruitment — vacancies and candidates</li>"

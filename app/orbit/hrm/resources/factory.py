@@ -67,6 +67,7 @@ def crud(
     modal: bool = False,
     employee_scope: str | None = None,
     menu_when: str = "read",
+    nav: bool = True,
 ) -> type[Resource]:
     def inputs(cls: type[Resource]) -> list[Any]:
         return [TextInput.make(name).required() for name in cls.entry_fields]
@@ -162,6 +163,7 @@ def crud(
         "records_mutable": mutable,
         "quick_modal": modal,
         "menu_when": menu_when,
+        "should_register_navigation": nav,
         "form": classmethod(form),
         "table": classmethod(table),
         "infolist": classmethod(infolist),
