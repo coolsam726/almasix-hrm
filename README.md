@@ -17,7 +17,7 @@ smith migrate --seed
 smith serve
 ```
 
-Sign in as `ada@northwind.test` / `secret` (administrator), `grace@northwind.test` (supervisor), or `alan@northwind.test` (employee).
+Sign in as `ada@northwind.test` / `secret` (administrator), `grace@northwind.test` (supervisor), or `alan@northwind.test` (employee). The seed is Northwind People in Nairobi: those three accounts, a wider directory, and sample leave, time, hiring, and workplace rows. If an older database is already there, delete `database/database.sqlite` and run `smith migrate --seed` again.
 
 Against published packages, `pip install -e ".[dev]"` is enough. `smith migrate --seed` still loads the sample company.
 

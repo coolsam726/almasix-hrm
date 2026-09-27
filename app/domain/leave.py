@@ -41,18 +41,18 @@ def count_leave_days(
         raise ValueError("The end date is before the start date.")
     if partial != "full" and start != end:
         raise ValueError("A partial day must start and end on the same date.")
-    total = Decimal(0)
+    total = Decimal("0")
     cursor = start
     while cursor <= end:
         working = bool(work_week.get(WEEKDAYS[cursor.weekday()], True))
         if working and cursor not in holidays:
-            total += Decimal("0.5") if partial != "full" else Decimal(1)
+            total += Decimal("0.5") if partial != "full" else Decimal("1")
         cursor += timedelta(days=1)
     return total
 
 
 def summarize(entitled: Decimal, requests: list[tuple[str, Decimal]]) -> tuple[Decimal, Decimal, Decimal]:
     """Return used, pending, remaining from (state, days) pairs."""
-    used = sum((days for state, days in requests if state == "approved"), Decimal(0))
-    pending = sum((days for state, days in requests if state == "pending"), Decimal(0))
+    used = sum((days for state, days in requests if state == "approved"), Decimal("0"))
+    pending = sum((days for state, days in requests if state == "pending"), Decimal("0"))
     return used, pending, entitled - used - pending

@@ -62,15 +62,15 @@ class RulesTest:
     def test_leave_days_skip_weekends_holidays_and_count_halves(self) -> None:
         monday = date(2026, 1, 5)
         friday = date(2026, 1, 9)
-        assert count_leave_days(monday, friday, WEEK, set()) == Decimal(5)
-        assert count_leave_days(monday, friday, WEEK, {friday}) == Decimal(4)
-        assert count_leave_days(friday, friday, WEEK, {friday}, partial="half") == Decimal(0)
+        assert count_leave_days(monday, friday, WEEK, set()) == Decimal("5")
+        assert count_leave_days(monday, friday, WEEK, {friday}) == Decimal("4")
+        assert count_leave_days(friday, friday, WEEK, {friday}, partial="half") == Decimal("0")
         assert count_leave_days(monday, monday, WEEK, set(), partial="half_morning") == Decimal("0.5")
         used, pending, remaining = summarize(
-            Decimal(20),
-            [("approved", Decimal(2)), ("pending", Decimal(1))],
+            Decimal("20"),
+            [("approved", Decimal("2")), ("pending", Decimal("1"))],
         )
-        assert (used, pending, remaining) == (Decimal(2), Decimal(1), Decimal(17))
+        assert (used, pending, remaining) == (Decimal("2"), Decimal("1"), Decimal("17"))
 
     def test_illegal_workflow_and_punch_order(self) -> None:
         rows = [
@@ -98,7 +98,7 @@ class RulesTest:
         except ValueError:
             pass
         try:
-            validate_hours(Decimal(25))
+            validate_hours(Decimal("25"))
             raise AssertionError("expected hours to be rejected")
         except ValueError:
             pass

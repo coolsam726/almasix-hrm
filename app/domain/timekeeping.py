@@ -6,7 +6,7 @@ from decimal import Decimal
 
 
 def validate_hours(hours: Decimal) -> Decimal:
-    if hours < 0 or hours > Decimal(24):
+    if hours < 0 or hours > Decimal("24"):
         raise ValueError("Hours must be between 0 and 24.")
     return hours
 

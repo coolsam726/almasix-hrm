@@ -587,17 +587,92 @@ class PanelTest(HrmTest):
         panel = register_hrm_panel(PanelRegistry())
         panel.load_discovered()
         labels = {resource.navigation_label for resource in panel._resources}
-        for label in ("Job titles", "Employees", "Leave requests", "Vacancies", "Shifts"):
+        for label in ("Job titles", "Employee list", "Leave requests", "Vacancies", "Shifts"):
             assert label in labels
         titles = {page.get_title() for page in panel._pages}
         assert "Directory" in titles
+        assert "My Info" in titles
         assert "Assistant" in titles
+        groups = {resource.navigation_group for resource in panel._resources}
+        groups.update(page.navigation_group for page in panel._pages)
+        for name in ("PIM", "My Info", "Recruitment", "Performance", "Directory", "Buzz", "Claim", "Maintenance"):
+            assert name in groups
+        assert "People" not in groups
+        assert "Talent" not in groups
+        assert "Workplace" not in groups
+
+        from almasix.orbit.panels.navigation import build_menu_secondary
+
+        items = panel.navigation_items()
+        admin = [item for item in items if item.get("group") == "Admin"]
+        secondary = build_menu_secondary(
+            admin,
+            subgroup_meta=panel._nav_subgroups,
+            parent_group="Admin",
+        )
+        assert [item.label for item in secondary] == [
+            "Job",
+            "Organization",
+            "Qualifications",
+            "Configuration",
+        ]
+        assert all(item.children for item in secondary)
+        assert len(admin) > len(secondary)
+        job_labels = {child.label for child in secondary[0].children}
+        assert "Job titles" in job_labels
+        assert "Job titles" not in {item.label for item in secondary}
 
         from app.orbit.hrm.resources.admin import JobTitleResource
+        from app.orbit.hrm.resources.people import EmployeeResource
 
         await self.seed()
-        assert JobTitleResource.can_view_any(self.ada)
         assert not JobTitleResource.can_view_any(self.alan)
+        assert not EmployeeResource.can_view_any(self.alan)
+        assert EmployeeResource.can_view_any(self.grace)
+        assert EmployeeResource.can_view_any(self.ada)
+
+        from app.orbit.hrm.pages.places import MyInfoPage, OrgChartPage
+
+        assert MyInfoPage.can_access(self.alan)
+        assert not OrgChartPage.can_access(self.alan)
+        assert OrgChartPage.can_access(self.grace)
+
+        titles = JobTitleResource.get_table()
+        assert titles._header_actions[0].is_modal()
+        assert titles._header_actions[0].should_create_another()
+        assert [action.get_name() for action in titles._actions] == ["view", "edit", "delete"]
+        assert all(action.is_modal() for action in titles._actions)
+        row = titles._render_row({"id": 1, "name": "Engineer"}, titles.flat_columns())
+        assert "or-tr-clickable" in row
+        assert 'data-record-action="view"' in row
+        employees = EmployeeResource.get_table()
+        assert employees._header_actions[0].is_modal() is False
+        assert employees._header_actions[0].get_url() == "/employees/create"
+
+    async def test_an_employee_only_sees_people_in_scope(self) -> None:
+        await self.seed()
+        from app.orbit.hrm.resources.people import EmployeeResource
+
+        people = list(await Employee.all())
+        alan_rows = await EmployeeResource.scope_records(self.alan, people)
+        assert {row.email for row in alan_rows} == {"alan@northwind.test"}
+        assert EmployeeResource.can_create(self.alan) is False
+        assert EmployeeResource.can_delete(self.alan) is False
+
+        grace_rows = await EmployeeResource.scope_records(self.grace, people)
+        grace_emails = {row.email for row in grace_rows}
+        assert "alan@northwind.test" in grace_emails
+        assert "grace@northwind.test" in grace_emails
+        assert "ada@northwind.test" not in grace_emails
+
+        ada_rows = await EmployeeResource.scope_records(self.ada, people)
+        assert len(ada_rows) == len(people)
+        assert EmployeeResource.can_create(self.ada) is True
+
+        ada = next(row for row in people if row.email == "ada@northwind.test")
+        alan = next(row for row in people if row.email == "alan@northwind.test")
+        assert await EmployeeResource.record_allowed(self.alan, ada, write=True) is False
+        assert await EmployeeResource.record_allowed(self.alan, alan, write=False) is True
 
     async def test_the_assistant_endpoint_answers_an_admin(self) -> None:
         await self.seed()
@@ -606,4 +681,6 @@ class PanelTest(HrmTest):
         response.assert_ok()
         payload = response.json()
         assert payload["refused"] is False
-        assert "3" in payload["text"]
+        active = [row for row in await Employee.all() if not row.terminated_on]
+        assert len(active) >= 8
+        assert payload["text"] == f"Active headcount: {len(active)}."

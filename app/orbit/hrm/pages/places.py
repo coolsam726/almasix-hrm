@@ -6,7 +6,7 @@ from typing import Any
 
 from almasix.orbit.panels.page import Page
 
-from app.domain.access import user_can_read
+from app.domain.access import grant_for, user_can_read
 
 
 class Guard:
@@ -23,10 +23,20 @@ class OrgChartPage(Guard, Page):
     slug = "org-chart"
     title = "Organization chart"
     navigation_label = "Org chart"
-    navigation_group = "People"
+    navigation_group = "PIM"
+    navigation_subgroup = ""
     navigation_icon = "heroicon-o-share"
     navigation_sort = 20
     data_group = "pim"
+
+    @classmethod
+    def can_access(cls, user: Any) -> bool:
+        if not user_can_read(user, cls.data_group):
+            return False
+        if getattr(user, "is_admin", False):
+            return True
+        scope = str((grant_for(user, cls.data_group) or {}).get("scope") or "self")
+        return scope in {"subordinates", "all"}
 
     @classmethod
     def render(cls, **ctx: Any) -> str:
@@ -38,11 +48,31 @@ class OrgChartPage(Guard, Page):
         )
 
 
+class MaintenancePage(Guard, Page):
+    slug = "maintenance"
+    title = "Purge records"
+    navigation_label = "Purge records"
+    navigation_group = "Maintenance"
+    navigation_icon = "heroicon-o-trash"
+    navigation_sort = 1
+    data_group = "maintenance"
+
+    @classmethod
+    def render(cls, **ctx: Any) -> str:
+        del ctx
+        return (
+            '<div class="or-page"><h1 class="or-page-title">Purge records</h1>'
+            "<p>An administrator can purge an employee who has no one reporting to them. "
+            "That removes the person and the rows that belong to them.</p></div>"
+        )
+
+
 class LeaveCalendarPage(Guard, Page):
     slug = "leave-calendar"
     title = "Leave calendar"
     navigation_label = "Calendar"
     navigation_group = "Leave"
+    navigation_subgroup = "Requests"
     navigation_icon = "heroicon-o-calendar"
     navigation_sort = 20
     data_group = "leave"
@@ -57,11 +87,43 @@ class LeaveCalendarPage(Guard, Page):
         )
 
 
+class MyInfoPage(Guard, Page):
+    """ESS entry. OrangeHRM labels this side module My Info."""
+
+    slug = "my-info"
+    title = "My Info"
+    navigation_label = "Personal details"
+    navigation_group = "My Info"
+    navigation_subgroup = "Personal"
+    navigation_icon = "heroicon-o-user"
+    navigation_sort = 1
+    data_group = "pim"
+
+    @classmethod
+    def render(cls, **ctx: Any) -> str:
+        del ctx
+        from almasix.orbit.panels.pages.resource_pages import _auth_user
+
+        user = _auth_user()
+        employee_id = getattr(user, "employee_id", None) if user is not None else None
+        if not employee_id:
+            return (
+                '<div class="or-page"><h1 class="or-page-title">My Info</h1>'
+                "<p>This account is not linked to an employee record.</p></div>"
+            )
+        return (
+            '<div class="or-page"><h1 class="or-page-title">My Info</h1>'
+            "<p>This is your own employee record. Contacts, dependents, and "
+            "immigration for you are in the menu beside this page.</p>"
+            f'<p><a href="/employees/{employee_id}">Open your record</a></p></div>'
+        )
+
+
 class DirectoryPage(Guard, Page):
     slug = "directory"
     title = "Directory"
     navigation_label = "Directory"
-    navigation_group = "Workplace"
+    navigation_group = "Directory"
     navigation_icon = "heroicon-o-book-open"
     navigation_sort = 1
     data_group = "directory"
@@ -80,8 +142,8 @@ class BuzzPage(Guard, Page):
     slug = "buzz"
     title = "Buzz"
     navigation_label = "Buzz"
-    navigation_group = "Workplace"
-    navigation_icon = "heroicon-o-chat-bubble-left-ellipsis"
+    navigation_group = "Buzz"
+    navigation_subgroup = ""
     navigation_sort = 4
     data_group = "buzz"
 
@@ -99,7 +161,8 @@ class PipelinePage(Guard, Page):
     slug = "pipeline"
     title = "Candidate pipeline"
     navigation_label = "Pipeline"
-    navigation_group = "Talent"
+    navigation_group = "Recruitment"
+    navigation_subgroup = ""
     navigation_icon = "heroicon-o-queue-list"
     navigation_sort = 8
     data_group = "recruitment"
@@ -119,6 +182,7 @@ class TimesheetPage(Guard, Page):
     title = "Timesheet"
     navigation_label = "My timesheet"
     navigation_group = "Time"
+    navigation_subgroup = "Attendance"
     navigation_icon = "heroicon-o-table-cells"
     navigation_sort = 10
     data_group = "time"
@@ -138,7 +202,7 @@ class RosterPage(Guard, Page):
     title = "Roster"
     navigation_label = "Roster"
     navigation_group = "Advanced"
-    navigation_icon = "heroicon-o-calendar-days"
+    navigation_subgroup = "Roster"
     navigation_sort = 20
     data_group = "roster"
 
@@ -157,7 +221,7 @@ class NineBoxPage(Guard, Page):
     title = "9-box"
     navigation_label = "9-box"
     navigation_group = "Advanced"
-    navigation_icon = "heroicon-o-squares-2x2"
+    navigation_subgroup = "Career"
     navigation_sort = 21
     data_group = "career"
 
@@ -175,7 +239,7 @@ class AssistantPage(Guard, Page):
     title = "Assistant"
     navigation_label = "Assistant"
     navigation_group = "Advanced"
-    navigation_icon = "heroicon-o-sparkles"
+    navigation_subgroup = "Company"
     navigation_sort = 30
     data_group = "assistant"
 

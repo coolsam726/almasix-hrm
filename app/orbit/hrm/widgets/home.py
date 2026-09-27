@@ -35,10 +35,12 @@ class HeadcountNote(Widget):
         del state, ctx
         return (
             "<ul>"
-            "<li>People — employee profiles, contacts, and custom fields</li>"
+            "<li>PIM — the employee list, for people you are allowed to manage</li>"
+            "<li>My Info — your own record, contacts, and dependents</li>"
             "<li>Leave — entitlements, requests, and the holiday calendar</li>"
             "<li>Time — timesheets and attendance punches</li>"
-            "<li>Talent — vacancies, candidates, and reviews</li>"
-            "<li>Workplace — directory, posts, and claims</li>"
+            "<li>Recruitment — vacancies and candidates</li>"
+            "<li>Performance — goals and reviews</li>"
+            "<li>Directory, Buzz, and Claim</li>"
             "</ul>"
         )
